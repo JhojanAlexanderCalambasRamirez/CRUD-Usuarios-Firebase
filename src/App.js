@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useState, useEffect } from 'react';
+import UserForm from './components/UserForm';
+import UserList from './components/UserList';
+import Auth from './components/Auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const [currentUser, setCurrentUser] = useState(null);
+    const auth = getAuth();
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user);
+        });
+        return () => unsubscribe();
+    }, [auth]);
+
+    return (
+        <div>
+            <h1>Firebase CRUD</h1>
+            {currentUser ? (
+                <>
+                    <UserForm user={currentUser} />
+                    <UserList />
+                    <button onClick={() => auth.signOut()}>Sign Out</button>
+                </>
+            ) : (
+                <Auth setUser={setCurrentUser} />
+            )}
+        </div>
+    );
+};
 
 export default App;
