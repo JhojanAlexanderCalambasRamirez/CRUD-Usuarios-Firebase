@@ -1,4 +1,3 @@
-// src/components/UserList.js
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, query, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore';
@@ -51,20 +50,22 @@ const UserList = () => {
     };
 
     return (
-        <div>
+        <div className="user-list-container">
             <h2>User List</h2>
-            <ul>
+            <ul className="user-list">
                 {users.map((user) => (
-                    <li key={user.id}>
-                        {user.name} ({user.email})
-                        <button onClick={() => handleEdit(user)}>Edit</button>
-                        <button onClick={() => handleDelete(user.id)}>Delete</button>
+                    <li key={user.id} className="user-list-item">
+                        <span>{user.name} ({user.email})</span>
+                        <div>
+                            <button className="edit-button" onClick={() => handleEdit(user)}>Edit</button>
+                            <button className="delete-button" onClick={() => handleDelete(user.id)}>Delete</button>
+                        </div>
                     </li>
                 ))}
             </ul>
 
             {editMode && (
-                <form onSubmit={handleUpdate}>
+                <form onSubmit={handleUpdate} className="update-form">
                     <input
                         type="text"
                         value={currentName}
@@ -75,7 +76,7 @@ const UserList = () => {
                         value={currentEmail}
                         onChange={(e) => setCurrentEmail(e.target.value)}
                     />
-                    <button type="submit">Update User</button>
+                    <button type="submit" className="update-button">Update User</button>
                 </form>
             )}
         </div>
